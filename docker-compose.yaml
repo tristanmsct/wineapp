@@ -1,0 +1,64 @@
+version: '3.8'
+services:
+
+  postgresql:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - 5432:5432
+    networks:
+      - wineapp-network
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@mail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    networks:
+      - wineapp-network
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  mlflow-server:
+    build:
+      context: ./
+      dockerfile: mlflow_wine/Dockerfile
+    depends_on:
+      - postgresql
+    ports:
+      - 5000:5000
+    networks:
+      - wineapp-network
+    restart: on-failure
+    volumes:
+      - ./mlflow_wine/mlflow-data:/mlflow
+
+  api_wine:
+    build:
+      context: ./
+      dockerfile: api_wine/Dockerfile
+    depends_on:
+      - postgresql
+      - mlflow-server
+    ports:
+      - 8000:8000
+    networks:
+      - wineapp-network
+    restart: on-failure
+    environment:
+      - MLFLOW_HOST=mlflow-server
+
+networks:
+  wineapp-network:
+    driver: bridge
+
+volumes:
+  pgadmin-data:

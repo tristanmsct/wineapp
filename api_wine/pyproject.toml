@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "api-wine"
+version = "0.1.0"
+description = ""
+authors = ["Tristan Muscat"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.110.1"
+uvicorn = "^0.29.0"
+pandas = "^2.2.2"
+scikit-learn = "^1.4.2"
+mlflow = "^2.11.3"
+pydantic-settings = "^2.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

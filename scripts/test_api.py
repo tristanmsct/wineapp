@@ -30,7 +30,7 @@ headers = {
     'Content-Type': 'application/json',
 }
 
-response = requests.post('http://127.0.0.1:8000/quality', headers=headers, data=str_json)
+response = requests.post('http://localhost:8000/quality', headers=headers, data=str_json)
 
 pred = json.loads(response.content.decode("utf-8"))
 
